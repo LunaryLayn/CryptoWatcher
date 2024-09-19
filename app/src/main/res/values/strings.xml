@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">CryptoWatcher</string>
+    <string name="error_fetch_data">Error fetching data. Please try again later or contact us at SwissBorg.com</string>
+    <string name="error_no_internet">No internet connection. Data may not be up to date. Please check your network settings and try again.</string>
+    <string name="default_error">An unknown error occurred. Please try again later or contact support if the issue persists.</string>
+    <string name="connected">Connected</string>
+    <string name="no_internet">No Internet</string>
+</resources>
