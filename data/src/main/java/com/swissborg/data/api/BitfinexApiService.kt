@@ -1,11 +1,15 @@
 package com.swissborg.data.api
 
+import com.swissborg.data.constants.AppConstants
 import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface BitfinexApiService {
 
     @GET("v2/tickers")
-    suspend fun getTickers(@Query("symbols") symbols: String = "ALL"): List<List<Any>>
+    suspend fun getTickers(@Query("symbols") symbols: String = AppConstants.SYMBOL_LIST): List<List<Any>>
+
+    @GET("v2/conf/pub:map:currency:sym")
+    suspend fun getCurrencyNames(): List<List<Map<String, String>>>
 
 }

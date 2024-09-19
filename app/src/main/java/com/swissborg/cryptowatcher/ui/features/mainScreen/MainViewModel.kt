@@ -39,7 +39,6 @@ class MainViewModel @Inject constructor(
     private fun observeNetworkStatus() {
         viewModelScope.launch {
             observeNetworkStatusUseCase().collect { hasConnection ->
-                Log.d("MainViewModel", "Has connection: $hasConnection")
                 _isConnected.value = hasConnection
             }
         }
@@ -47,15 +46,8 @@ class MainViewModel @Inject constructor(
 
     private fun getTickers() {
         viewModelScope.launch {
-            isConnected.collect { isConnected ->
-                if (isConnected) {
-                    Log.d("MainViewModel", "Starting to retrieve tickers periodically")
-                    getTickersUseCase(this@MainViewModel)  // Llama al use case
-                } else {
-                    Log.d("MainViewModel", "No internet connection, stopping ticker retrieval")
-                    getTickersUseCase.stop()  // Detenemos el ciclo en el UseCase
-                }
-            }
+                getTickersUseCase(this@MainViewModel)
+
         }
     }
 

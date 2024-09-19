@@ -1,10 +1,12 @@
 package com.swissborg.data.mapper
 
 import com.swissborg.data.model.TickerDataModel
+import com.swissborg.data.util.DataUtil
 import com.swissborg.domain.model.TickerModel
+import okhttp3.internal.Util
 
 fun TickerDataModel.toDto() = TickerModel(
-    symbol = symbol,
+    symbol = symbol.removePrefix("t").removeSuffix(":USD").removeSuffix("USD"),
     bid = bid,
     bidSize = bidSize,
     ask = ask,
@@ -16,3 +18,4 @@ fun TickerDataModel.toDto() = TickerModel(
     high = high,
     low = low
 )
+
