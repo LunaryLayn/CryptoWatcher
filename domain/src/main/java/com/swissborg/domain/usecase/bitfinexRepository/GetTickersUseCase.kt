@@ -1,5 +1,6 @@
 package com.swissborg.domain.usecase.bitfinexRepository
 
+import android.icu.util.Output
 import android.util.Log
 import com.swissborg.domain.error.OutputError
 import com.swissborg.domain.repository.BitfinexRepository
@@ -18,19 +19,20 @@ class GetTickersUseCase @Inject constructor(
 
     suspend operator fun invoke(onGetTickersCompleted: OnGetTickersCompleted) {
         isConnected.collectLatest { isConnected ->
-            Log.d("GetTickersUseCase", "Cambio de conexion: $isConnected")
+
             if (isConnected) {
-                while (true) {
+                while (isConnected) {
                     try {
-                        Log.d("GetTickersUseCase", "Vueltesita")
+                        //Log.d("GetTickersUseCase", "Obteniendo tickers")
                         repository.getTickers(onGetTickersCompleted)
                     } catch (e: Exception) {
-                        Log.d("GetTickersUseCase", "Error: $e")
+                        //Log.d("GetTickersUseCase", "Error: $e")
+                        onGetTickersCompleted.onGetTickersError(OutputError.DefaultError)
                     }
                     delay(5000)
                 }
             } else {
-                Log.d("GetTickersUseCase", "No hay conexion")
+                //Log.d("GetTickersUseCase", "No hay conexion")
             }
         }
     }

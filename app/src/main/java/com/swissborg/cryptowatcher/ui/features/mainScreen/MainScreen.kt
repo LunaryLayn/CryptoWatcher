@@ -2,7 +2,6 @@ package com.swissborg.cryptowatcher.ui.features.mainScreen
 
 import android.widget.Toast
 import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
@@ -43,9 +42,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.drawscope.DrawScope
-import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -57,6 +53,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.swissborg.cryptowatcher.R
 import com.swissborg.cryptowatcher.ui.components.ExpandableErrorLabel
 import com.swissborg.cryptowatcher.util.Util.formatNumber
+import com.swissborg.cryptowatcher.util.Util.labeledBackground
 import com.swissborg.domain.model.TickerModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -70,7 +67,6 @@ fun MainScreen() {
 
     var searchQuery by remember { mutableStateOf(TextFieldValue("")) }
 
-    // Estado para la criptomoneda seleccionada
     var selectedTicker by remember { mutableStateOf<TickerModel?>(null) }
 
     Scaffold(
@@ -116,7 +112,7 @@ fun MainScreen() {
                     placeholder = { Text(text = stringResource(id = R.string.search)) },
                     modifier = Modifier.fillMaxWidth()
                 )
-                // Mostrar la tarjeta de la criptomoneda seleccionada
+
                 SelectedCryptoCard(selectedTicker!!)
                 ExpandableErrorLabel(error)
 
@@ -176,9 +172,11 @@ fun TickerItem(ticker: TickerModel, isSelected: Boolean, onClick: () -> Unit) {
                 Text(
                     text = "${stringResource(id = R.string.last_24)}: ${ticker.dailyChangePerc.formatNumber()}%",
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.tertiary,
-                    modifier = Modifier.align(Alignment.End)
+                    color = if(ticker.dailyChangePerc >= 0) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
+                    modifier = Modifier
+                        .align(Alignment.End)
                 )
+
                 Text(
                     text = "${stringResource(id = R.string.vol)}: ${ticker.volume.formatNumber()}",
                     style = MaterialTheme.typography.bodyMedium,
@@ -205,7 +203,7 @@ fun SelectedCryptoCard(ticker: TickerModel) {
             Text(
                 text = "${stringResource(id = R.string.price)}: ${ticker.lastPrice.formatNumber()} ${stringResource(id = R.string.usd)}",
                 style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.tertiary
+                color = MaterialTheme.colorScheme.secondary
             )
             Row(horizontalArrangement = Arrangement.SpaceEvenly, modifier = Modifier.fillMaxWidth()) {
                 Text(
@@ -223,7 +221,7 @@ fun SelectedCryptoCard(ticker: TickerModel) {
                 Text(
                     text = "${stringResource(id = R.string.last_24)}: ${ticker.dailyChangePerc.formatNumber()}%",
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.tertiary
+                    color = if(ticker.dailyChangePerc >= 0) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
                 )
 
                 Text(
@@ -301,72 +299,26 @@ fun SelectedCryptoCard(ticker: TickerModel) {
 @Composable
 fun PulsatingDot(
     modifier: Modifier = Modifier,
-    color: Color = Color.Green,  // Puedes cambiar el color si lo deseas
-    minRadius: Float = 15f,      // Radio mínimo del punto
-    maxRadius: Float = 20f       // Radio máximo del punto (cuando está en su punto máximo)
+    color: Color = Color.Green,
+    minRadius: Float = 15f,
+    maxRadius: Float = 20f
 ) {
-    // Animación infinita
-    val infiniteTransition = rememberInfiniteTransition()
+    val infiniteTransition = rememberInfiniteTransition(label = "")
 
-    // Animamos el radio del punto desde `minRadius` a `maxRadius`
     val radius by infiniteTransition.animateFloat(
         initialValue = minRadius,
         targetValue = maxRadius,
         animationSpec = infiniteRepeatable(
             animation = tween(durationMillis = 1000, easing = FastOutSlowInEasing),
-            repeatMode = RepeatMode.Reverse  // Reverso para crear el efecto de pulsar
-        )
+            repeatMode = RepeatMode.Reverse
+        ), label = ""
     )
 
     // Dibujamos el punto usando `Canvas`
     Canvas(modifier = modifier.size(40.dp)) {
         drawCircle(
-            color = color,    // Color del punto
-            radius = radius   // Radio animado del punto
+            color = color,
+            radius = radius
         )
     }
-}
-
-@Composable
-fun PriceIncreaseTriangleAnimation(modifier: Modifier = Modifier) {
-    // Definimos la altura del movimiento hacia arriba
-    val animationHeight = 20f
-
-    // Definimos la animación con un ciclo repetido
-    val infiniteTransition = rememberInfiniteTransition(label = "")
-    val offsetY by infiniteTransition.animateFloat(
-        initialValue = 20f,
-        targetValue = -animationHeight, // Moverse hacia arriba
-        animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 1000, easing = LinearEasing),
-            repeatMode = RepeatMode.Restart
-        ), label = ""
-    )
-
-    Box(
-        contentAlignment = Alignment.Center
-    ) {
-        Canvas(
-            modifier = Modifier.size(10.dp)
-        ) {
-            // Aplicar la traslación para mover el triángulo
-            translate(left = 0f, top = offsetY) {
-                drawTriangle()
-            }
-        }
-    }
-}
-
-fun DrawScope.drawTriangle() {
-    val trianglePath = Path().apply {
-        moveTo(size.width / 2, 0f) // Punto superior del triángulo
-        lineTo(0f, size.height) // Esquina inferior izquierda
-        lineTo(size.width, size.height) // Esquina inferior derecha
-        close() // Cerrar el triángulo
-    }
-
-    drawPath(
-        path = trianglePath,
-        color = Color.Green // Color del triángulo
-    )
 }

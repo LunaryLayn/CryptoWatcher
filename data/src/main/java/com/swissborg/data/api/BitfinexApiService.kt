@@ -9,7 +9,4 @@ interface BitfinexApiService {
     @GET("v2/tickers")
     suspend fun getTickers(@Query("symbols") symbols: String = AppConstants.SYMBOL_LIST): List<List<Any>>
 
-    @GET("v2/conf/pub:map:currency:sym")
-    suspend fun getCurrencyNames(): List<List<Map<String, String>>>
-
 }

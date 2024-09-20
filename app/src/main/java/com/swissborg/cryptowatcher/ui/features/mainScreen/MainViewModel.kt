@@ -2,7 +2,6 @@ package com.swissborg.cryptowatcher.ui.features.mainScreen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.swissborg.cryptowatcher.error.ErrorManagerImpl
 import com.swissborg.domain.error.ErrorManager
 import com.swissborg.domain.error.OutputError
 import com.swissborg.domain.model.TickerModel
@@ -54,7 +53,6 @@ class MainViewModel @Inject constructor(
     }
 
     private fun setTickers(tickers: List<TickerModel>) {
-        //Log.d("MainViewModel", "Setting tickers: $tickers")
         _tickers.value = tickers
     }
 

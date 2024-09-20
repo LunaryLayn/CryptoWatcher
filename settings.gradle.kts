@@ -23,4 +23,3 @@ rootProject.name = "CryptoWatcher"
 include(":app")
 include(":data")
 include(":domain")
-include(":framework")

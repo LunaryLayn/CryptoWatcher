@@ -6,7 +6,6 @@ import com.swissborg.data.mapper.toDto
 import com.swissborg.data.model.TickerDataModel
 import com.swissborg.domain.error.OutputError
 import com.swissborg.domain.repository.BitfinexRepository
-import com.swissborg.domain.repository.NetworkRepository
 import com.swissborg.domain.repository.OnGetTickersCompleted
 
 class BitfinexRepositoryImpl(
