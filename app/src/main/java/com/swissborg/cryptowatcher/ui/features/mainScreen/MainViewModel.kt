@@ -1,8 +1,9 @@
 package com.swissborg.cryptowatcher.ui.features.mainScreen
 
-import android.util.Log
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.swissborg.cryptowatcher.ui.features.BaseViewModel
+import com.swissborg.cryptowatcher.error.ErrorManagerImpl
+import com.swissborg.domain.error.ErrorManager
 import com.swissborg.domain.error.OutputError
 import com.swissborg.domain.model.TickerModel
 import com.swissborg.domain.repository.OnGetTickersCompleted
@@ -18,8 +19,9 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val getTickersUseCase: GetTickersUseCase,
-    private val observeNetworkStatusUseCase: ObserveNetworkStatusUseCase
-) : BaseViewModel(), OnGetTickersCompleted {
+    private val observeNetworkStatusUseCase: ObserveNetworkStatusUseCase,
+    private val errorManager: ErrorManager
+) : ViewModel(), OnGetTickersCompleted {
 
     private val _tickers = MutableStateFlow<List<TickerModel>>(emptyList())
     val tickers = _tickers.asStateFlow()
@@ -39,13 +41,14 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             observeNetworkStatusUseCase().collect { hasConnection ->
                 _isConnected.value = hasConnection
+                if (!hasConnection) setError(errorManager.convert(OutputError.NoInternetError)) else setError(null)
             }
         }
     }
 
     private fun getTickers() {
         viewModelScope.launch {
-                getTickersUseCase(this@MainViewModel)
+            getTickersUseCase(this@MainViewModel)
 
         }
     }

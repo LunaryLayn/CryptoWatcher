@@ -1,10 +1,12 @@
 package com.swissborg.cryptowatcher.di.module
 
 import android.content.Context
+import com.swissborg.cryptowatcher.error.ErrorManagerImpl
 import com.swissborg.data.api.BitfinexApiService
 import com.swissborg.data.constants.AppConstants
 import com.swissborg.data.repository.BitfinexRepositoryImpl
 import com.swissborg.data.repository.NetworkRepositoryImpl
+import com.swissborg.domain.error.ErrorManager
 import com.swissborg.domain.repository.BitfinexRepository
 import com.swissborg.domain.repository.NetworkRepository
 import dagger.Module
@@ -45,5 +47,9 @@ object AppModule {
         return BitfinexRepositoryImpl(apiService)
     }
 
+    @Provides
+    fun provideErrorManager(@ApplicationContext context: Context): ErrorManager {
+        return ErrorManagerImpl(context)
+    }
 
 }

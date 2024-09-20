@@ -7,5 +7,4 @@ import javax.inject.Inject
 abstract class BaseViewModel : ViewModel() {
     @Inject
     protected lateinit var errorManager: ErrorManagerImpl
-
 }

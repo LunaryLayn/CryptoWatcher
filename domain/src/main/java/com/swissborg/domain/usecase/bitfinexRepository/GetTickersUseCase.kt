@@ -31,7 +31,6 @@ class GetTickersUseCase @Inject constructor(
                 }
             } else {
                 Log.d("GetTickersUseCase", "No hay conexion")
-                onGetTickersCompleted.onGetTickersError(OutputError.NoInternetError)
             }
         }
     }
