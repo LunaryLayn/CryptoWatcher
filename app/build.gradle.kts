@@ -78,8 +78,6 @@ dependencies {
     implementation(libs.androidx.coroutines.core)
     implementation(libs.androidx.coroutines.android)
 
-
-
     // Retrofit
     implementation(libs.retrofit)
     implementation(libs.retrofit.gson)
@@ -95,4 +93,9 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+    testImplementation ("org.mockito:mockito-core:5.4.0")
+    testImplementation ("org.mockito.kotlin:mockito-kotlin:5.0.0")
+    testImplementation ("androidx.arch.core:core-testing:2.1.0")
 }

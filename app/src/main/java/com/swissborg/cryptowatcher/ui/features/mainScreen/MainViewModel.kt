@@ -9,7 +9,6 @@ import com.swissborg.domain.repository.OnGetTickersCompleted
 import com.swissborg.domain.usecase.bitfinexRepository.GetTickersUseCase
 import com.swissborg.domain.usecase.networkRepository.ObserveNetworkStatusUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

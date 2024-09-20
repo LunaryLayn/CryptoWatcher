@@ -1,5 +1,6 @@
 package com.swissborg.cryptowatcher.ui.features.mainScreen
 
+import android.widget.Toast
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
@@ -8,23 +9,25 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.OutlinedTextField
@@ -39,20 +42,20 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.translate
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.swissborg.cryptowatcher.R
 import com.swissborg.cryptowatcher.ui.components.ExpandableErrorLabel
-import com.swissborg.cryptowatcher.ui.theme.secondaryContainerLight
-import com.swissborg.cryptowatcher.ui.theme.secondaryLight
 import com.swissborg.cryptowatcher.util.Util.formatNumber
 import com.swissborg.domain.model.TickerModel
 
@@ -89,7 +92,12 @@ fun MainScreen() {
                     .fillMaxSize()
                     .padding(paddingValues), contentAlignment = Alignment.Center
             ) {
-                CircularProgressIndicator()
+                if (isConnected) CircularProgressIndicator() else Text(
+                    text = stringResource(id = R.string.no_internet_message),
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.padding(16.dp),
+                    textAlign = TextAlign.Center
+                )
             }
         } else {
 
@@ -105,13 +113,11 @@ fun MainScreen() {
                 OutlinedTextField(
                     value = searchQuery,
                     onValueChange = { searchQuery = it },
-                    label = { Text(text = "Search") },
+                    placeholder = { Text(text = stringResource(id = R.string.search)) },
                     modifier = Modifier.fillMaxWidth()
                 )
                 // Mostrar la tarjeta de la criptomoneda seleccionada
                 SelectedCryptoCard(selectedTicker!!)
-
-
                 ExpandableErrorLabel(error)
 
                 Divider(thickness = 2.dp, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(vertical = 16.dp))
@@ -138,7 +144,6 @@ fun TickerItem(ticker: TickerModel, isSelected: Boolean, onClick: () -> Unit) {
             .fillMaxWidth()
             .padding(4.dp)
             .let {
-                // Si está seleccionado, aplicar un borde de color primary
                 if (isSelected) it.border(2.dp, MaterialTheme.colorScheme.primary, RoundedCornerShape(8.dp))
                 else it
             }
@@ -148,18 +153,38 @@ fun TickerItem(ticker: TickerModel, isSelected: Boolean, onClick: () -> Unit) {
                 .fillMaxWidth()
                 .padding(16.dp)
         ) {
-            Column() {
-                Text(text = ticker.symbol, style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)
-                Text(text = "${ticker.lastPrice.formatNumber()} US$", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.tertiary)
-            }
-            Spacer(modifier = Modifier.weight(1f))
             Column {
+                Text(
+                    text = ticker.symbol,
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.primary,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = "${ticker.lastPrice.formatNumber()} ${stringResource(id = R.string.usd)}",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.tertiary
+                )
+            }
 
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    PriceIncreaseTriangleAnimation()
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text(text = "${ticker.dailyChangePerc.formatNumber()}%")
-                }
+            Spacer(modifier = Modifier.weight(1f))
+
+            Column(
+                horizontalAlignment = Alignment.End,
+                modifier = Modifier.align(Alignment.CenterVertically)
+            ) {
+                Text(
+                    text = "${stringResource(id = R.string.last_24)}: ${ticker.dailyChangePerc.formatNumber()}%",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.tertiary,
+                    modifier = Modifier.align(Alignment.End)
+                )
+                Text(
+                    text = "${stringResource(id = R.string.vol)}: ${ticker.volume.formatNumber()}",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.tertiary,
+                    modifier = Modifier.align(Alignment.End)
+                )
             }
         }
     }
@@ -167,6 +192,9 @@ fun TickerItem(ticker: TickerModel, isSelected: Boolean, onClick: () -> Unit) {
 
 @Composable
 fun SelectedCryptoCard(ticker: TickerModel) {
+
+    val context = LocalContext.current
+
     OutlinedCard(
         modifier = Modifier
             .fillMaxWidth()
@@ -174,16 +202,98 @@ fun SelectedCryptoCard(ticker: TickerModel) {
     ) {
         Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
             Text(text = ticker.symbol, style = MaterialTheme.typography.titleLarge, color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)
-            Text(text = "Price: ${ticker.lastPrice}", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.tertiary)
-            Text(text = "Daily change ${ticker.dailyChangePerc}%", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.error)
-            Row {
-                Text(text = "TRON")
+            Text(
+                text = "${stringResource(id = R.string.price)}: ${ticker.lastPrice.formatNumber()} ${stringResource(id = R.string.usd)}",
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.tertiary
+            )
+            Row(horizontalArrangement = Arrangement.SpaceEvenly, modifier = Modifier.fillMaxWidth()) {
                 Text(
-                    text = "TRX", color = secondaryLight, modifier = Modifier
-                        .clip(RoundedCornerShape(24.dp))
-                        .background(secondaryContainerLight)
+                    text = "${stringResource(id = R.string.high)}: ${ticker.high.formatNumber()} ${stringResource(id = R.string.usd)}",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.tertiary
+                )
+                Text(
+                    text = "${stringResource(id = R.string.low)}: ${ticker.low.formatNumber()} ${stringResource(id = R.string.usd)}",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.tertiary
                 )
             }
+            Row(horizontalArrangement = Arrangement.SpaceEvenly, modifier = Modifier.fillMaxWidth()) {
+                Text(
+                    text = "${stringResource(id = R.string.last_24)}: ${ticker.dailyChangePerc.formatNumber()}%",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.tertiary
+                )
+
+                Text(
+                    text = "${stringResource(id = R.string.vol)}: ${ticker.volume.formatNumber()}",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.tertiary
+                )
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_arrow_in),
+                        contentDescription = stringResource(id = R.string.receive),
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier
+                            .border(1.dp, MaterialTheme.colorScheme.primary, RoundedCornerShape(50))
+                            .clickable {Toast.makeText(context, context.getString(R.string.feature_fake), Toast.LENGTH_SHORT).show()}
+                    )
+                    Text(
+                        text = stringResource(id = R.string.receive),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
+
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_arrow_out),
+                        contentDescription = stringResource(id = R.string.send),
+                        tint = MaterialTheme.colorScheme.error,
+                        modifier = Modifier
+                            .border(1.dp, MaterialTheme.colorScheme.error, RoundedCornerShape(50))
+                            .clickable {Toast.makeText(context, context.getString(R.string.feature_fake), Toast.LENGTH_SHORT).show()}
+                    )
+                    Text(
+                        text = stringResource(id = R.string.send),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
+
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_arrow_change),
+                        contentDescription = stringResource(id = R.string.swap),
+                        tint = MaterialTheme.colorScheme.secondary,
+                        modifier = Modifier
+                            .border(1.dp, MaterialTheme.colorScheme.secondary, RoundedCornerShape(50))
+                            .clickable {Toast.makeText(context, context.getString(R.string.feature_fake), Toast.LENGTH_SHORT).show()}
+                    )
+                    Text(
+                        text = stringResource(id = R.string.swap),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.secondary
+                    )
+                }
+            }
+
         }
     }
 }
@@ -223,7 +333,7 @@ fun PriceIncreaseTriangleAnimation(modifier: Modifier = Modifier) {
     val animationHeight = 20f
 
     // Definimos la animación con un ciclo repetido
-    val infiniteTransition = rememberInfiniteTransition()
+    val infiniteTransition = rememberInfiniteTransition(label = "")
     val offsetY by infiniteTransition.animateFloat(
         initialValue = 20f,
         targetValue = -animationHeight, // Moverse hacia arriba
