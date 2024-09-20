@@ -51,7 +51,7 @@ class MainViewModel @Inject constructor(
     }
 
     private fun setTickers(tickers: List<TickerModel>) {
-        Log.d("MainViewModel", "Setting tickers: $tickers")
+        //Log.d("MainViewModel", "Setting tickers: $tickers")
         _tickers.value = tickers
     }
 

@@ -6,7 +6,7 @@ import android.content.Intent
 import android.net.ConnectivityManager
 
 class ConnectivityReceiver : BroadcastReceiver() {
-    var onConnectivityChanged: ((isConnected: Boolean) -> Unit)? = null
+    private var onConnectivityChanged: ((isConnected: Boolean) -> Unit)? = null
 
     override fun onReceive(context: Context, intent: Intent) {
         val connectivityManager =

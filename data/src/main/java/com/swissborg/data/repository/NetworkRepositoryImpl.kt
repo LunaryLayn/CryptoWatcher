@@ -7,9 +7,9 @@ import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import com.swissborg.domain.repository.NetworkRepository
-import com.swissborg.framework.receivers.ConnectivityReceiver
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 class NetworkRepositoryImpl (
     private val context: Context
@@ -42,5 +42,5 @@ class NetworkRepositoryImpl (
     }
 
 
-    override fun observeNetworkStatus(): Flow<Boolean> = _networkStatus
+    override fun observeNetworkStatus(): Flow<Boolean> = _networkStatus.asStateFlow()
 }
