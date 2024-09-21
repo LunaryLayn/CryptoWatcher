@@ -1,3 +1,7 @@
+/*
+ * © Hugo 2024 for SwissBorg technical challenge
+ */
+
 pluginManagement {
     repositories {
         google {

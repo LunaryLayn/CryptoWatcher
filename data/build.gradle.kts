@@ -1,3 +1,7 @@
+/*
+ * © Hugo 2024 for SwissBorg technical challenge
+ */
+
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsKotlinAndroid)
@@ -39,8 +43,8 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.retrofit.gson)
 
-    testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
-    testImplementation ("org.mockito:mockito-core:5.4.0")
-    testImplementation ("org.mockito.kotlin:mockito-kotlin:5.0.0")
-    testImplementation ("androidx.arch.core:core-testing:2.1.0")
+    testImplementation (libs.kotlinx.coroutines.test)
+    testImplementation (libs.mockito.core)
+    testImplementation (libs.mockito.kotlin)
+    testImplementation (libs.androidx.core.testing)
 }

@@ -1,3 +1,7 @@
+/*
+ * © Hugo 2024 for SwissBorg technical challenge
+ */
+
 package com.swissborg.cryptowatcher.ui.components
 
 import androidx.compose.animation.AnimatedVisibility

@@ -1,3 +1,7 @@
+/*
+ * © Hugo 2024 for SwissBorg technical challenge
+ */
+
 package com.swissborg.data.repository
 
 import android.content.Context
@@ -14,6 +18,7 @@ class NetworkRepositoryImpl (
     private val context: Context
 ) : NetworkRepository {
 
+    //This implementation is used to check if the device is connected to the internet, so the app can react to the network status
     private val _networkStatus = MutableStateFlow(true)
     private val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 

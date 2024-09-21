@@ -1,7 +1,9 @@
+/*
+ * © Hugo 2024 for SwissBorg technical challenge
+ */
+
 package com.swissborg.domain.usecase.bitfinexRepository
 
-import android.icu.util.Output
-import android.util.Log
 import com.swissborg.domain.error.OutputError
 import com.swissborg.domain.repository.BitfinexRepository
 import com.swissborg.domain.repository.NetworkRepository
@@ -15,6 +17,11 @@ class GetTickersUseCase @Inject constructor(
     private val networkRepository: NetworkRepository
 ) {
 
+    /*This implementation is used to check if the device is
+    connected to the internet, so the app won't try to fetch data if there is no
+    internet connection to save resources*/
+
+
     private val isConnected = networkRepository.observeNetworkStatus()
 
     suspend operator fun invoke(onGetTickersCompleted: OnGetTickersCompleted) {
@@ -23,16 +30,14 @@ class GetTickersUseCase @Inject constructor(
             if (isConnected) {
                 while (isConnected) {
                     try {
-                        //Log.d("GetTickersUseCase", "Obteniendo tickers")
                         repository.getTickers(onGetTickersCompleted)
                     } catch (e: Exception) {
-                        //Log.d("GetTickersUseCase", "Error: $e")
                         onGetTickersCompleted.onGetTickersError(OutputError.DefaultError)
                     }
                     delay(5000)
                 }
             } else {
-                //Log.d("GetTickersUseCase", "No hay conexion")
+                //Log.d("GetTickersUseCase", "No Internet") Uncomment this line to see the log
             }
         }
     }

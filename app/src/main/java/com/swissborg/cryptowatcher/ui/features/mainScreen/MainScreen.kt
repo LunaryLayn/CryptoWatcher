@@ -1,13 +1,10 @@
+/*
+ * © Hugo 2024 for SwissBorg technical challenge
+ */
+
 package com.swissborg.cryptowatcher.ui.features.mainScreen
 
 import android.widget.Toast
-import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.tween
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -41,7 +38,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -52,8 +48,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.swissborg.cryptowatcher.R
 import com.swissborg.cryptowatcher.ui.components.ExpandableErrorLabel
+import com.swissborg.cryptowatcher.ui.components.PulsatingDot
 import com.swissborg.cryptowatcher.util.Util.formatNumber
-import com.swissborg.cryptowatcher.util.Util.labeledBackground
 import com.swissborg.domain.model.TickerModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -119,7 +115,7 @@ fun MainScreen() {
                 Divider(thickness = 2.dp, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(vertical = 16.dp))
 
                 LazyColumn() {
-                    items(tickers.filter { it.symbol.contains(searchQuery.text, ignoreCase = true) }) { ticker ->
+                    items(tickers.filter { it.symbol.startsWith(searchQuery.text, ignoreCase = true) }) { ticker ->
                         TickerItem(ticker = ticker, isSelected = ticker == selectedTicker) {
                             selectedTicker = ticker
                         }
@@ -130,6 +126,7 @@ fun MainScreen() {
         }
     }
 }
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -296,29 +293,3 @@ fun SelectedCryptoCard(ticker: TickerModel) {
     }
 }
 
-@Composable
-fun PulsatingDot(
-    modifier: Modifier = Modifier,
-    color: Color = Color.Green,
-    minRadius: Float = 15f,
-    maxRadius: Float = 20f
-) {
-    val infiniteTransition = rememberInfiniteTransition(label = "")
-
-    val radius by infiniteTransition.animateFloat(
-        initialValue = minRadius,
-        targetValue = maxRadius,
-        animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 1000, easing = FastOutSlowInEasing),
-            repeatMode = RepeatMode.Reverse
-        ), label = ""
-    )
-
-    // Dibujamos el punto usando `Canvas`
-    Canvas(modifier = modifier.size(40.dp)) {
-        drawCircle(
-            color = color,
-            radius = radius
-        )
-    }
-}

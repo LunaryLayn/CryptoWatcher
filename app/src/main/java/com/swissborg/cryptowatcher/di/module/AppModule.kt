@@ -1,3 +1,11 @@
+/*
+ * © Hugo 2024 for SwissBorg technical challenge
+ */
+
+/*
+ * © Hugo 2024 for SwissBorg technical challenge
+ */
+
 package com.swissborg.cryptowatcher.di.module
 
 import android.content.Context

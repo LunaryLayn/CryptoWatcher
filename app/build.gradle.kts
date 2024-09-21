@@ -1,3 +1,7 @@
+/*
+ * © Hugo 2024 for SwissBorg technical challenge
+ */
+
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
@@ -64,11 +68,11 @@ dependencies {
     implementation(libs.androidx.material3)
 
     // Hilt dependencies
-    implementation("com.google.dagger:dagger-android-support:2.44")
-    implementation("com.google.dagger:hilt-android:2.44")
-    kapt("com.google.dagger:hilt-android-compiler:2.44")
-    kapt("androidx.hilt:hilt-compiler:1.1.0")
-    implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
+    implementation(libs.dagger.android.support)
+    implementation(libs.hilt.android)
+    kapt(libs.dagger.hilt.android.compiler)
+    kapt(libs.androidx.hilt.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
 
 
     implementation(libs.androidx.ui.text.google.fonts)
@@ -94,8 +98,8 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
-    testImplementation ("org.mockito:mockito-core:5.4.0")
-    testImplementation ("org.mockito.kotlin:mockito-kotlin:5.0.0")
-    testImplementation ("androidx.arch.core:core-testing:2.1.0")
+    testImplementation (libs.kotlinx.coroutines.test)
+    testImplementation (libs.mockito.core)
+    testImplementation (libs.mockito.kotlin)
+    testImplementation (libs.androidx.core.testing)
 }

@@ -1,3 +1,7 @@
+/*
+ * © Hugo 2024 for SwissBorg technical challenge
+ */
+
 package com.swissborg.domain.usecase.networkRepository
 
 import com.swissborg.domain.repository.NetworkRepository

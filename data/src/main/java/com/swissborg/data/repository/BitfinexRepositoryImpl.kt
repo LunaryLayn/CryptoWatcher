@@ -1,3 +1,7 @@
+/*
+ * © Hugo 2024 for SwissBorg technical challenge
+ */
+
 package com.swissborg.data.repository
 
 import android.util.Log
@@ -14,7 +18,7 @@ class BitfinexRepositoryImpl(
     override suspend fun getTickers(onGetTickersCompleted: OnGetTickersCompleted) {
         try {
             val response = apiService.getTickers()
-            Log.d("BitfinexRepositoryImpl", "Response: $response")
+            //Usually, we would use GSON or Moshi to parse the JSON response, but since the response is a List of List, not a key-value pair, we can't use them
             val tickersList = response.map { item ->
                 TickerDataModel(
                     symbol = item[0] as String,

@@ -1,3 +1,7 @@
+/*
+ * © Hugo 2024 for SwissBorg technical challenge
+ */
+
 package com.swissborg.cryptowatcher.ui.theme
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme

@@ -1,3 +1,7 @@
+/*
+ * © Hugo 2024 for SwissBorg technical challenge
+ */
+
 package com.swissborg.cryptowatcher.ui.theme
 
 import androidx.compose.material3.Typography

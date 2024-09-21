@@ -1,3 +1,7 @@
+<!--
+  ~ © Hugo 2024 for SwissBorg technical challenge
+  -->
+
 <resources>
     <string name="app_name">CryptoWatcher</string>
     <string name="error_fetch_data">We couldn\'t connect to the server so data may not be up to date. Please check your connection and try again later, or contact us at SwissBorg.com</string>

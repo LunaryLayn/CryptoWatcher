@@ -1,3 +1,7 @@
+/*
+ * © Hugo 2024 for SwissBorg technical challenge
+ */
+
 package com.swissborg.data.mapper
 
 import com.swissborg.data.model.TickerDataModel
