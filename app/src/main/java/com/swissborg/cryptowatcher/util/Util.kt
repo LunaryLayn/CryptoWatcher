@@ -29,6 +29,4 @@ object Util {
             decimalFormat.format(this)
         }
     }
-
-    fun Modifier.labeledBackground(color: Color) = this.clip(RoundedCornerShape(24.dp)).background(color)
 }
