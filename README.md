@@ -5,7 +5,7 @@ This project is a submission for the **SwissBorg Mobile Tech Challenge**. The ap
 ## Features
 
 - **Real-time Price Updates**: The list of trading pairs is updated automatically every 5 seconds to reflect the latest prices.
-- **Search and Filter**: Users can filter the trading pairs using a search bar for quick access to specific pairs.
+- **Search Filter**: Users can filter the trading pairs using a search bar for quick access to specific pairs.
 - **Connectivity Awareness**: The app reacts to connectivity changes, ensuring letting the user know that data may not be up-dated when there are network issues.
 - **Dark/Light Mode Support**: The UI supports both dark and light modes, providing an addaptative visual experience in different themes.
 - **Unit Testing**: Unit tests are included for the `getTickersUseCase`, as it contains the core business logic of the app.
