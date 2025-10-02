@@ -73,3 +73,15 @@ Este proyecto sigue el patrón **MVVM** (Model-View-ViewModel) combinado con los
 - **Capa de Presentación**: Construida con Jetpack Compose, esta capa muestra los datos obtenidos por el ViewModel, reaccionando a los cambios en el estado.  
 
 IMAGES AT THE END OF THIS PRESENTATION.  
+
+## Images
+
+![6012425624641193228](https://github.com/user-attachments/assets/59daee4c-b8dd-4842-8b31-c734c6092c9a)
+
+![6012425624641193227](https://github.com/user-attachments/assets/1eb20374-65d9-4adb-8240-1dd961baa264)
+
+![6012425624641193226](https://github.com/user-attachments/assets/7b5597ba-729b-487f-9fea-fd271b4a1b01)
+
+![6012425624641193225](https://github.com/user-attachments/assets/2d855d42-a88f-486e-9af5-7b5820e0c335)
+
+![6017217094451577165](https://github.com/user-attachments/assets/9f7b2ba8-15f8-4d17-8ad1-bb95762fefb0)
